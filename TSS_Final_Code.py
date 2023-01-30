@@ -224,6 +224,8 @@ import pybedtools
 from fuc import pybed
 import genomepy
 import numpy
+import matplotlib.pyplot as plt
+import numpy as np
 
 ### Identification of the TSS Sites ###
 
@@ -314,8 +316,8 @@ TSS1 = pd.read_csv('/Users/neha/Desktop/TSS_Gene_Mapping/Tss_pyranges.csv', usec
 TSS1 = pr.PyRanges(TSS1) #Converting the Start, and End Columns in to the range using PyRanges function;
 # print(TSS1)
 TSS2 = TSS1.extend({"3": 5000, "5": 5000}) #Calculating the upstream and downstream 5kb region;
-# TSS2 = pr.Pyranges(TSS2)
-TSS2_1 = TSS2[TSS2.Start < 17912340]
+# TSS2 = pr.PyRanges(TSS2)
+# TSS2_1 = TSS2[TSS2.Start < 17912340]
 # print(TSS2_1)
 # TSS2.boundaries("gene_id")
 
@@ -338,6 +340,29 @@ coverage_read1 = (Read1.to_rle()) #Calculating the coverage using read length en
 # r1 = coverage_read1[["chr21"]][Start(site):End(site)]
 # print(r1)
 
+site_run = coverage_read1["chr21"][TSS2.Start.values[0]:TSS2.End.values[0]] #mapping the coverage of read over gene(s);
+# print(site_run)
+site_run_val = list(site_run.values) #list of value (which value) that has to repeat;
+# print(site_run_val)
+site_run_len = list(site_run.runs) #list of value that how many time above value has to repeat;
+# print(site_run_len)
+# print(np.repeat(site_run_val, site_run_len, axis = 1))
+decode_list = []
+
+for x, y in zip(site_run_val, site_run_len): #decoding the values based on length
+    z = [x]*y
+    decode_list.append(z) #the values are in array here;
+decode_list = list(np.concatenate(decode_list))
+# print(decode_list)
+
+# decode_list_1 = list(np.concatenate(decode_list))
+# print(decode_list_1) #converting the decoded value in one list;
+
+plt.plot(decode_list)
+plt.show()
+# site_run_val = numpy.repeat[[site_run.values][site_run.runs]]
+# plt.plot(site_run_val) #plotting the coverage mapping using read lengths, and values;
+# plt.show()
 
 
 
